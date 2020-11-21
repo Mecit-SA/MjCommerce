@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30711.63
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MjCommerce.Shared", "MjCommerce.Shared\MjCommerce.Shared.csproj", "{7800F0D9-FE58-4EBA-A884-1AD638EE0FD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MjCommerce.API", "MjCommerce.API\MjCommerce.API.csproj", "{339F66D5-4385-4C4D-BAD0-0AC5BC79E700}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7800F0D9-FE58-4EBA-A884-1AD638EE0FD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7800F0D9-FE58-4EBA-A884-1AD638EE0FD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7800F0D9-FE58-4EBA-A884-1AD638EE0FD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7800F0D9-FE58-4EBA-A884-1AD638EE0FD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{339F66D5-4385-4C4D-BAD0-0AC5BC79E700}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{339F66D5-4385-4C4D-BAD0-0AC5BC79E700}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{339F66D5-4385-4C4D-BAD0-0AC5BC79E700}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{339F66D5-4385-4C4D-BAD0-0AC5BC79E700}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70C5293F-CAC2-4478-A595-C286A0E5F5F4}
+	EndGlobalSection
+EndGlobal
