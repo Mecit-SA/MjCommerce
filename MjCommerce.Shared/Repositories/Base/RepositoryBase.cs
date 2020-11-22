@@ -73,7 +73,7 @@ namespace MjCommerce.Shared.Repositories.Base
 
         public async Task<bool> Conatins(string name)
         {
-            var result = await _table.FirstOrDefaultAsync(e => e.Name == name);
+            var result = await _context.Categories.FirstOrDefaultAsync(e => e.Name == name);
             return result != null;
         }
     }

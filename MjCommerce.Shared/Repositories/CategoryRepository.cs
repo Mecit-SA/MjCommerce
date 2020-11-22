@@ -6,10 +6,12 @@ namespace MjCommerce.Shared.Repositories
 {
     public class CategoryRepository : RepositoryBase<Category>
     {
+        private readonly MjCommerceDbContext _context;
+
         public CategoryRepository(MjCommerceDbContext context, IMapper mapper) 
             : base(context, mapper)
         {
-
+            _context = context;
         }
     }
 }

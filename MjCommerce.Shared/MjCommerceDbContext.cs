@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using MjCommerce.Shared.Models;
 using MjCommerce.Shared.Models.Base;
+using MjCommerce.Shared.Models.Identity;
+using MjCommerce.Shared.Models.Orders;
 
 namespace MjCommerce.Shared
 {
@@ -15,6 +17,13 @@ namespace MjCommerce.Shared
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<PhotoBase> Photos { get; set; }
+
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Address> Addresses { get; set; }
+
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

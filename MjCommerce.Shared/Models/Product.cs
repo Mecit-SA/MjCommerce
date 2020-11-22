@@ -1,11 +1,17 @@
 ﻿using MjCommerce.Shared.Attributes;
 using MjCommerce.Shared.Models.Base;
+using MjCommerce.Shared.Models.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace MjCommerce.Shared.Models
 {
     public class Product : EntityBase
     {
+        [MjRequired]
+        public string SellerId { get; set; }
+        public Seller Seller { get; set; }
+
         [MjRequired]
         public int CategoryId { get; set; }
         public Category Category { get; set; }

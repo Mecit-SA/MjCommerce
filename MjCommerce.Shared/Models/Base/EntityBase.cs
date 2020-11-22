@@ -9,6 +9,7 @@ namespace MjCommerce.Shared.Models.Base
         [MjRequired]
         [MjStringLength(2, 100)]
         public string Name { get; set; }
+
         public bool Active { get; set; }
     }
 }
