@@ -7,6 +7,10 @@ namespace MjCommerce.Shared.Models
     public class Country : EntityBase
     {
         [MjRequired]
+        [MjStringLength(2, 100)]
+        public string Name { get; set; }
+
+        [MjRequired]
         [MjStringLength(1,10)]
         public string PhoneCode { get; set; }
         public ICollection<City> Cities { get; set; }

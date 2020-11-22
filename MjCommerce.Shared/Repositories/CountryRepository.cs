@@ -4,9 +4,9 @@ using MjCommerce.Shared.Repositories.Base;
 
 namespace MjCommerce.Shared.Repositories
 {
-    public class CategoryRepository : RepositoryBase<Category>
+    public class CountryRepository : RepositoryBase<Country>
     {
-        public CategoryRepository(MjCommerceDbContext context, IMapper mapper) 
+        public CountryRepository(MjCommerceDbContext context, IMapper mapper)
             : base(context, mapper)
         {
 

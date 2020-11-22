@@ -1,12 +1,13 @@
 ﻿using MjCommerce.Shared.Filters.Interfaces;
 using MjCommerce.Shared.Models;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MjCommerce.Shared.Filters
 {
     public class CategoryFilter : PagingFilter<Category>, IFilter<Category>
     {
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
         public string Name { get; set; }
 
         public IQueryable<Category> Build(IQueryable<Category> initialSet, bool applyPaging)
@@ -16,7 +17,7 @@ namespace MjCommerce.Shared.Filters
                 initialSet = initialSet.Where(c => c.Active == Active);
             }
 
-            if (ParentId > 0)
+            if (ParentId.HasValue && ParentId.Value > 0)
             {
                 initialSet = initialSet.Where(c => c.ParentId == ParentId);
             }
@@ -32,6 +33,25 @@ namespace MjCommerce.Shared.Filters
             }
 
             return initialSet;
+        }
+
+        public override string ToString()
+        {
+            var properties = GetType().GetProperties();
+
+            ICollection<string> parameters = new List<string>();
+
+            foreach (var property in properties)
+            {
+                var propertyValue = property.GetValue(this);
+
+                if (propertyValue != null)
+                {
+                    parameters.Add($"{property.Name}={propertyValue}");
+                }
+            }
+
+            return string.Join("&", parameters);
         }
     }
 }

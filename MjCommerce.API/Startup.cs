@@ -36,9 +36,11 @@ namespace MjCommerce.API
 
             services.AddAutoMapper(typeof(CategoryProfile));
             services.AddAutoMapper(typeof(ProductProfile));
+            services.AddAutoMapper(typeof(CountryProfile));
 
             services.AddScoped<IRepository<Category>, CategoryRepository>();
             services.AddScoped<IRepository<Product>, ProductRepository>();
+            services.AddScoped<IRepository<Country>, CountryRepository>();
 
             services.AddIdentity<User, IdentityRole>(options =>
             {

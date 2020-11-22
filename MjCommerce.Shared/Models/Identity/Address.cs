@@ -1,11 +1,10 @@
 ﻿using MjCommerce.Shared.Attributes;
+using MjCommerce.Shared.Models.Base;
 
 namespace MjCommerce.Shared.Models.Identity
 {
-    public class Address
+    public class Address : EntityBase
     {
-        public int Id { get; set; }
-
         [MjRequired]
         public string CustomerId { get; set; }
         public Customer Customer { get; set; }

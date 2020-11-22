@@ -11,6 +11,10 @@ namespace MjCommerce.Shared.Models
         public int CountryId { get; set; }
         public Country Country { get; set; }
 
+        [MjRequired]
+        [MjStringLength(2, 100)]
+        public string Name { get; set; }
+
         public ICollection<Address> Addresses { get; set; }
     }
 }

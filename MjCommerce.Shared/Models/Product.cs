@@ -1,7 +1,6 @@
 ﻿using MjCommerce.Shared.Attributes;
 using MjCommerce.Shared.Models.Base;
 using MjCommerce.Shared.Models.Identity;
-using System;
 using System.Collections.Generic;
 
 namespace MjCommerce.Shared.Models
@@ -15,6 +14,10 @@ namespace MjCommerce.Shared.Models
         [MjRequired]
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+
+        [MjRequired]
+        [MjStringLength(2, 100)]
+        public string Name { get; set; }
 
         public decimal OriginalPrice { get; set; }
         public float DiscountPercentage { get; set; }

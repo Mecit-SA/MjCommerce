@@ -5,38 +5,26 @@ using System.Linq;
 
 namespace MjCommerce.Shared.Filters
 {
-    public class ProductFilter : PagingFilter<Product>, IFilter<Product>
+    public class CountryFilter : PagingFilter<Country>, IFilter<Country>
     {
-        public int? CategoryId { get; set; }
         public string Name { get; set; }
-        public float? MinPrice { get; set; }
-        public float? MaxPrice { get; set; }
+        public string PhoneCode { get; set; }
 
-        public IQueryable<Product> Build(IQueryable<Product> initialSet, bool applyPaging)
+        public IQueryable<Country> Build(IQueryable<Country> initialSet, bool applyPaging)
         {
             if (Active)
             {
-                initialSet = initialSet.Where(p => p.Active == Active);
-            }
-
-            if(CategoryId.HasValue && CategoryId.Value > 0)
-            {
-                initialSet = initialSet.Where(p => p.CategoryId == CategoryId);
+                initialSet = initialSet.Where(c => c.Active == Active);
             }
 
             if (!string.IsNullOrWhiteSpace(Name))
             {
-                initialSet = initialSet.Where(p => p.Name.Contains(Name));
+                initialSet = initialSet.Where(c => c.Name.Contains(Name));
             }
 
-            if(MinPrice.HasValue && MinPrice.Value > 0)
+            if (!string.IsNullOrWhiteSpace(PhoneCode))
             {
-                initialSet = initialSet.Where(p => p.Price >= (decimal)MinPrice);
-            }
-
-            if(MaxPrice.HasValue && MaxPrice.Value > 0)
-            {
-                initialSet = initialSet.Where(p => p.Price <= (decimal)MaxPrice);
+                initialSet = initialSet.Where(c => c.PhoneCode.Contains(PhoneCode));
             }
 
             if (applyPaging)

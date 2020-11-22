@@ -1,9 +1,9 @@
-﻿namespace MjCommerce.Shared.Models.Orders
-{
-    public class OrderItem
-    {
-        public int Id { get; set; }
+﻿using MjCommerce.Shared.Models.Base;
 
+namespace MjCommerce.Shared.Models.Orders
+{
+    public class OrderItem : EntityBase
+    {
         public int OrderId { get; set; }
         public Order Order { get; set; }
 
