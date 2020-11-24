@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MjCommerce.API.Controllers.Base;
 using MjCommerce.Shared.Filters;
 using MjCommerce.Shared.Helpers.Identity;
+using MjCommerce.Shared.Managers.Files.Interfaces;
 using MjCommerce.Shared.Models;
 using MjCommerce.Shared.Repositories.Interfaces;
 using MjCommerce.Shared.Services.Identity.Interfaces;
@@ -15,13 +16,19 @@ namespace MjCommerce.API.Controllers
     [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Seller))]
     public class ProductsController : CrudController<Product, ProductFilter>
     {
-        private readonly IRepository<Product> _repository;
+        private readonly IRepository<Product> _productRepository;
+        private readonly IImagesManager _imagesManager;
+        private readonly IRepository<ProductPhoto> _productPhotoRepository;
         private readonly IProductOwnerAuthorizationService _productOwnerAuthorizationService;
 
-        public ProductsController(IRepository<Product> repository,
-            IProductOwnerAuthorizationService productOwnerAuthorizationService) : base(repository)
+        public ProductsController(IRepository<Product> productRepository,
+            IRepository<ProductPhoto> productPhotoRepository,
+            IImagesManager imagesManager,
+            IProductOwnerAuthorizationService productOwnerAuthorizationService) : base(productRepository)
         {
-            _repository = repository;
+            _productRepository = productRepository;
+            _imagesManager = imagesManager;
+            _productPhotoRepository = productPhotoRepository;
             _productOwnerAuthorizationService = productOwnerAuthorizationService;
         }
 
@@ -51,7 +58,7 @@ namespace MjCommerce.API.Controllers
         {
             try
             {
-                var productToDelete = await _repository.Get(id);
+                var productToDelete = await _productRepository.Get(id);
 
                 if (productToDelete == null)
                 {
@@ -66,7 +73,18 @@ namespace MjCommerce.API.Controllers
                     }
                 }
 
-                return Ok(await _repository.Delete(id));
+                // Delete image files which related to this product
+                var photos = await _productPhotoRepository.Get(new ProductPhotoFilter
+                {
+                    ProductId = productToDelete.Id
+                });
+
+                foreach (var photo in photos)
+                {
+                    await _imagesManager.DeleteAsync(photo.Name);
+                }
+
+                return Ok(await _productRepository.Delete(id));
             }
             catch (Exception)
             {
