@@ -8,9 +8,9 @@ using MjCommerce.Shared.Repositories.Interfaces;
 namespace MjCommerce.API.Controllers
 {
     [Authorize(Roles = nameof(Roles.Admin))]
-    public class CountriesController : CrudController<Country, CountryFilter>
+    public class CitiesController : CrudController<City, CityFilter>
     {
-        public CountriesController(IRepository<Country> repository) : base(repository)
+        public CitiesController(IRepository<City> repository) : base(repository)
         {
 
         }

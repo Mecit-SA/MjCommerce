@@ -1,44 +1,78 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MjCommerce.API.Controllers.Base;
 using MjCommerce.Shared.Filters;
 using MjCommerce.Shared.Helpers.Identity;
 using MjCommerce.Shared.Models;
 using MjCommerce.Shared.Repositories.Interfaces;
-using System.Security.Claims;
+using MjCommerce.Shared.Services.Identity.Interfaces;
+using System;
 using System.Threading.Tasks;
 
 namespace MjCommerce.API.Controllers
 {
+    [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Seller))]
     public class ProductsController : CrudController<Product, ProductFilter>
     {
-        public ProductsController(IRepository<Product> repository) : base(repository)
-        {
+        private readonly IRepository<Product> _repository;
+        private readonly IProductOwnerAuthorizationService _productOwnerAuthorizationService;
 
+        public ProductsController(IRepository<Product> repository,
+            IProductOwnerAuthorizationService productOwnerAuthorizationService) : base(repository)
+        {
+            _repository = repository;
+            _productOwnerAuthorizationService = productOwnerAuthorizationService;
         }
 
-        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Seller))]
-        public override Task<ActionResult<int>> Add(Product entity)
-        {
-            return base.Add(entity);
-        }
-
-        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Seller))]
         public async override Task<ActionResult<Product>> Update(int id, Product entity)
         {
-            if(User.IsInRole(nameof(Roles.Seller)) &&
-                entity.SellerId != User.FindFirst(ClaimTypes.NameIdentifier).Value)
+            try
             {
-                return StatusCode(403);
-            }
+                if (User.IsInRole(nameof(Roles.Seller)))
+                {
+                    if (!(await _productOwnerAuthorizationService.AuthorizeAsync(User, entity)).Succeeded)
+                    {
+                        return StatusCode(StatusCodes.Status403Forbidden);
+                    }
+                }
 
-            return await base.Update(id, entity);
+                return Ok(await base.Update(id, entity));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error updating product");
+            }
+            
         }
 
-        [Authorize(Roles = nameof(Roles.Admin) + ", " + nameof(Roles.Seller))]
-        public override Task<ActionResult<int>> Delete(int id)
+        public async override Task<ActionResult<int>> Delete(int id)
         {
-            return base.Delete(id);
+            try
+            {
+                var productToDelete = await _repository.Get(id);
+
+                if (productToDelete == null)
+                {
+                    return NotFound($"Product with Id = {id} not found");
+                }
+
+                if (User.IsInRole(nameof(Roles.Seller)))
+                {
+                    if (!(await _productOwnerAuthorizationService.AuthorizeAsync(User, productToDelete)).Succeeded)
+                    {
+                        return StatusCode(StatusCodes.Status403Forbidden);
+                    }
+                }
+
+                return Ok(await _repository.Delete(id));
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error deleting product");
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 namespace MjCommerce.API.Controllers
 {
+    [Authorize(Roles = nameof(Roles.Admin))]
     public class CategoriesController : CrudController<Category, CategoryFilter>
     {
         private readonly IRepository<Category> _repository;
@@ -21,35 +22,29 @@ namespace MjCommerce.API.Controllers
         }
 
 
-        [Authorize(Roles = nameof(Roles.Admin))]
         public async override Task<ActionResult<int>> Add(Category category)
         {
             try
             {
-                if (category != null && await _repository.Conatins(category.Name))
+                if (category == null)
+                {
+                    return BadRequest();
+                }
+
+                if (await _repository.Conatins(category.Name))
                 {
                     return BadRequest("Category name already exists");
                 }
 
-                return await base.Add(category);
+                var createdEntityId = await _repository.Add(category);
+
+                return CreatedAtAction(nameof(Get), new { id = createdEntityId }, createdEntityId);
             }
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Error adding data to the database");
             }
-        }
-
-        [Authorize(Roles = nameof(Roles.Admin))]
-        public override Task<ActionResult<Category>> Update(int id, Category entity)
-        {
-            return base.Update(id, entity);
-        }
-
-        [Authorize(Roles = nameof(Roles.Admin))]
-        public override Task<ActionResult<int>> Delete(int id)
-        {
-            return base.Delete(id);
         }
     }
 }

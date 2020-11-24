@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MjCommerce.Shared;
+using MjCommerce.Shared.Managers.Files;
+using MjCommerce.Shared.Managers.Files.Interfaces;
 using MjCommerce.Shared.Managers.Identity;
 using MjCommerce.Shared.Managers.Identity.Interfaces;
 using MjCommerce.Shared.MapperProfiles;
@@ -16,6 +18,8 @@ using MjCommerce.Shared.Models;
 using MjCommerce.Shared.Models.Identity;
 using MjCommerce.Shared.Repositories;
 using MjCommerce.Shared.Repositories.Interfaces;
+using MjCommerce.Shared.Services.Identity;
+using MjCommerce.Shared.Services.Identity.Interfaces;
 using System.Text;
 
 namespace MjCommerce.API
@@ -32,19 +36,35 @@ namespace MjCommerce.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region Entity Framework
             services.AddDbContext<MjCommerceDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
                 );
+            #endregion
 
+            #region Auto Mapper
             services.AddAutoMapper(typeof(CategoryProfile));
             services.AddAutoMapper(typeof(ProductProfile));
             services.AddAutoMapper(typeof(CountryProfile));
+            services.AddAutoMapper(typeof(CityProfile));
+            services.AddAutoMapper(typeof(ProductPhotoProfile));
+            #endregion
 
+            #region Repositories
             services.AddScoped<IRepository<Category>, CategoryRepository>();
             services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddScoped<IRepository<Country>, CountryRepository>();
+            services.AddScoped<IRepository<City>, CityRepository>();
+            services.AddScoped<IRepository<ProductPhoto>, ProductPhotoRepository>();
+            #endregion
 
+            #region Managers
             services.AddScoped<IUsersManager, UsersManager>();
+            services.AddSingleton<IImagesManager, ImagesManager>();
+            #endregion
+
+            #region Identity
+            services.AddScoped<IProductOwnerAuthorizationService, ProductOwnerAuthorizationService>();
 
             services.AddIdentity<User, IdentityRole>(options =>
             {
@@ -73,6 +93,7 @@ namespace MjCommerce.API
                     ValidateIssuerSigningKey = true
                 };
             });
+            #endregion
 
             services.AddControllers();
         }

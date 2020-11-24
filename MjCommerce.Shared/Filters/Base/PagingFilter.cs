@@ -1,7 +1,6 @@
-﻿using MjCommerce.Shared.Filters.Base;
-using System.Linq;
+﻿using System.Linq;
 
-namespace MjCommerce.Shared.Filters
+namespace MjCommerce.Shared.Filters.Base
 {
     public class PagingFilter<T> : FilterBase
     {

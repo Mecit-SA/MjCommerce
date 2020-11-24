@@ -1,6 +1,6 @@
-﻿using MjCommerce.Shared.Filters.Interfaces;
+﻿using MjCommerce.Shared.Filters.Base;
+using MjCommerce.Shared.Filters.Interfaces;
 using MjCommerce.Shared.Models;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace MjCommerce.Shared.Filters
@@ -9,6 +9,7 @@ namespace MjCommerce.Shared.Filters
     {
         public int? CategoryId { get; set; }
         public string Name { get; set; }
+        public string PhotoName { get; set; }
         public float? MinPrice { get; set; }
         public float? MaxPrice { get; set; }
 
@@ -21,7 +22,7 @@ namespace MjCommerce.Shared.Filters
 
             if(CategoryId.HasValue && CategoryId.Value > 0)
             {
-                initialSet = initialSet.Where(p => p.CategoryId == CategoryId);
+                initialSet = initialSet.Where(p => p.CategoryId == CategoryId.Value);
             }
 
             if (!string.IsNullOrWhiteSpace(Name))
@@ -29,14 +30,19 @@ namespace MjCommerce.Shared.Filters
                 initialSet = initialSet.Where(p => p.Name.Contains(Name));
             }
 
-            if(MinPrice.HasValue && MinPrice.Value > 0)
+            if (!string.IsNullOrWhiteSpace(PhotoName))
             {
-                initialSet = initialSet.Where(p => p.Price >= (decimal)MinPrice);
+                initialSet = initialSet.Where(p => p.Photos.Where(p => p.Name.Equals(PhotoName)).Any());
+            }
+
+            if (MinPrice.HasValue && MinPrice.Value > 0)
+            {
+                initialSet = initialSet.Where(p => p.Price >= (decimal)MinPrice.Value);
             }
 
             if(MaxPrice.HasValue && MaxPrice.Value > 0)
             {
-                initialSet = initialSet.Where(p => p.Price <= (decimal)MaxPrice);
+                initialSet = initialSet.Where(p => p.Price <= (decimal)MaxPrice.Value);
             }
 
             if (applyPaging)
@@ -49,21 +55,7 @@ namespace MjCommerce.Shared.Filters
 
         public override string ToString()
         {
-            var properties = GetType().GetProperties();
-
-            ICollection<string> parameters = new List<string>();
-
-            foreach (var property in properties)
-            {
-                var propertyValue = property.GetValue(this);
-
-                if (propertyValue != null)
-                {
-                    parameters.Add($"{property.Name}={propertyValue}");
-                }
-            }
-
-            return string.Join("&", parameters);
+            return ToQueryString(GetType().GetProperties());
         }
     }
 }

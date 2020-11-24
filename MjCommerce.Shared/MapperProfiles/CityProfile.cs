@@ -3,11 +3,11 @@ using MjCommerce.Shared.Models;
 
 namespace MjCommerce.Shared.MapperProfiles
 {
-    public class ProductProfile : Profile
+    public class CityProfile : Profile
     {
-        public ProductProfile()
+        public CityProfile()
         {
-            CreateMap<Product, Product>();
+            CreateMap<City, City>();
         }
     }
 }

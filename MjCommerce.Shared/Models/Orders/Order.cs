@@ -1,4 +1,5 @@
-﻿using MjCommerce.Shared.Models.Base;
+﻿using MjCommerce.Shared.Attributes;
+using MjCommerce.Shared.Models.Base;
 using MjCommerce.Shared.Models.Identity;
 using System.Collections.Generic;
 
@@ -6,6 +7,7 @@ namespace MjCommerce.Shared.Models.Orders
 {
     public class Order : EntityBase
     {
+        [MjRequired]
         public string CustomerId { get; set; }
         public Customer Customer { get; set; }
 

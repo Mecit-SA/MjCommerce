@@ -1,6 +1,6 @@
-﻿using MjCommerce.Shared.Filters.Interfaces;
+﻿using MjCommerce.Shared.Filters.Base;
+using MjCommerce.Shared.Filters.Interfaces;
 using MjCommerce.Shared.Models;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace MjCommerce.Shared.Filters
@@ -19,7 +19,7 @@ namespace MjCommerce.Shared.Filters
 
             if (ParentId.HasValue && ParentId.Value > 0)
             {
-                initialSet = initialSet.Where(c => c.ParentId == ParentId);
+                initialSet = initialSet.Where(c => c.ParentId == ParentId.Value);
             }
 
             if(!string.IsNullOrWhiteSpace(Name))
@@ -37,21 +37,7 @@ namespace MjCommerce.Shared.Filters
 
         public override string ToString()
         {
-            var properties = GetType().GetProperties();
-
-            ICollection<string> parameters = new List<string>();
-
-            foreach (var property in properties)
-            {
-                var propertyValue = property.GetValue(this);
-
-                if (propertyValue != null)
-                {
-                    parameters.Add($"{property.Name}={propertyValue}");
-                }
-            }
-
-            return string.Join("&", parameters);
+            return ToQueryString(GetType().GetProperties());
         }
     }
 }

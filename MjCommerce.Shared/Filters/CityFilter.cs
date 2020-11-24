@@ -5,12 +5,13 @@ using System.Linq;
 
 namespace MjCommerce.Shared.Filters
 {
-    public class CountryFilter : PagingFilter<Country>, IFilter<Country>
+    public class CityFilter : PagingFilter<City>, IFilter<City>
     {
-        public string Name { get; set; }
-        public string PhoneCode { get; set; }
+        public int? CategoryId { get; set; }
 
-        public IQueryable<Country> Build(IQueryable<Country> initialSet, bool applyPaging)
+        public string Name { get; set; }
+
+        public IQueryable<City> Build(IQueryable<City> initialSet, bool applyPaging)
         {
             if (Active)
             {
@@ -22,9 +23,9 @@ namespace MjCommerce.Shared.Filters
                 initialSet = initialSet.Where(c => c.Name.Contains(Name));
             }
 
-            if (!string.IsNullOrWhiteSpace(PhoneCode))
+            if (CategoryId.HasValue && CategoryId.Value > 0)
             {
-                initialSet = initialSet.Where(c => c.PhoneCode.Contains(PhoneCode));
+                initialSet = initialSet.Where(c => c.CountryId == CategoryId.Value);
             }
 
             if (applyPaging)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MjCommerce.Shared.Filters.Interfaces;
 using MjCommerce.Shared.Models.Base;
@@ -23,6 +24,7 @@ namespace MjCommerce.API.Controllers.Base
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<T>>> Get()
         {
             try
@@ -37,6 +39,7 @@ namespace MjCommerce.API.Controllers.Base
         }
 
         [HttpGet("search")]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<T>>> Get([FromQuery] FilterType filter)
         {
             try
@@ -51,6 +54,7 @@ namespace MjCommerce.API.Controllers.Base
         }
 
         [HttpGet("{id:int}")]
+        [AllowAnonymous]
         public async Task<ActionResult<T>> Get(int id)
         {
             try
@@ -62,7 +66,7 @@ namespace MjCommerce.API.Controllers.Base
                     return NotFound($"{typeof(T).Name} with Id = {id} not found");
                 }
 
-                return result;
+                return Ok(result);
             }
             catch (Exception)
             {
@@ -109,7 +113,7 @@ namespace MjCommerce.API.Controllers.Base
                     return NotFound($"{typeof(T).Name} with Id = {id} not found");
                 }
 
-                return await _repository.Update(entity);
+                return Ok(await _repository.Update(entity));
             }
             catch (Exception)
             {
@@ -130,7 +134,7 @@ namespace MjCommerce.API.Controllers.Base
                     return NotFound($"{typeof(T).Name} with Id = {id} not found");
                 }
 
-                return await _repository.Delete(id);
+                return Ok(await _repository.Delete(id));
             }
             catch (Exception)
             {
