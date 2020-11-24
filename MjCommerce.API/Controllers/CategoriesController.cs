@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MjCommerce.API.Controllers.Base;
 using MjCommerce.Shared.Filters;
+using MjCommerce.Shared.Helpers.Identity;
 using MjCommerce.Shared.Models;
 using MjCommerce.Shared.Repositories.Interfaces;
 using System;
@@ -18,16 +20,13 @@ namespace MjCommerce.API.Controllers
             _repository = repository;
         }
 
+
+        [Authorize(Roles = nameof(Roles.Admin))]
         public async override Task<ActionResult<int>> Add(Category category)
         {
             try
             {
-                if (category == null)
-                {
-                    return BadRequest();
-                }
-
-                if (await _repository.Conatins(category.Name))
+                if (category != null && await _repository.Conatins(category.Name))
                 {
                     return BadRequest("Category name already exists");
                 }
@@ -39,6 +38,18 @@ namespace MjCommerce.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError,
                     "Error adding data to the database");
             }
+        }
+
+        [Authorize(Roles = nameof(Roles.Admin))]
+        public override Task<ActionResult<Category>> Update(int id, Category entity)
+        {
+            return base.Update(id, entity);
+        }
+
+        [Authorize(Roles = nameof(Roles.Admin))]
+        public override Task<ActionResult<int>> Delete(int id)
+        {
+            return base.Delete(id);
         }
     }
 }

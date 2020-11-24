@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MjCommerce.Shared;
+using MjCommerce.Shared.Managers.Identity;
+using MjCommerce.Shared.Managers.Identity.Interfaces;
 using MjCommerce.Shared.MapperProfiles;
 using MjCommerce.Shared.Models;
 using MjCommerce.Shared.Models.Identity;
@@ -42,11 +44,15 @@ namespace MjCommerce.API
             services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddScoped<IRepository<Country>, CountryRepository>();
 
+            services.AddScoped<IUsersManager, UsersManager>();
+
             services.AddIdentity<User, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
                 options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
             }).AddEntityFrameworkStores<MjCommerceDbContext>()
               .AddDefaultTokenProviders();
 

@@ -7,7 +7,7 @@ using MjCommerce.Shared.Models.Orders;
 
 namespace MjCommerce.Shared
 {
-    public class MjCommerceDbContext : IdentityDbContext
+    public class MjCommerceDbContext : IdentityDbContext<User>
     {
         public MjCommerceDbContext(DbContextOptions options) : base(options)
         {

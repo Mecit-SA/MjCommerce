@@ -1,14 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MjCommerce.Shared.Helpers.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MjCommerce.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    //[Authorize(Roles = nameof(Roles.Seller))]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

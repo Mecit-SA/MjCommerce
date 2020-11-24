@@ -32,11 +32,11 @@ namespace MjCommerce.API.Controllers.Base
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retriving data from the database");
+                    "Error retriving data");
             }
         }
 
-        [HttpGet("{search}")]
+        [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<T>>> Get([FromQuery] FilterType filter)
         {
             try
@@ -46,7 +46,7 @@ namespace MjCommerce.API.Controllers.Base
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retriving data from the database");
+                    "Error retriving data");
             }
         }
 
@@ -59,7 +59,7 @@ namespace MjCommerce.API.Controllers.Base
 
                 if (result == null)
                 {
-                    return NotFound($"Entity with Id = {id} not found");
+                    return NotFound($"{typeof(T).Name} with Id = {id} not found");
                 }
 
                 return result;
@@ -67,7 +67,7 @@ namespace MjCommerce.API.Controllers.Base
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error retriving data from the database");
+                    "Error retriving data");
             }
         }
 
@@ -88,25 +88,25 @@ namespace MjCommerce.API.Controllers.Base
             catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError,
-                    "Error adding data to the database");
+                    "Error adding data");
             }
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<T>> Update(int id, T entity)
+        public virtual async Task<ActionResult<T>> Update(int id, T entity)
         {
             try
             {
                 if (id != entity.Id)
                 {
-                    return BadRequest("Entity ID mismatch");
+                    return BadRequest($"{typeof(T).Name} ID mismatch");
                 }
 
                 var entityToUpdate = await _repository.Get(id);
 
                 if (entityToUpdate == null)
                 {
-                    return NotFound($"Entity with Id = {id} not found");
+                    return NotFound($"{typeof(T).Name} with Id = {id} not found");
                 }
 
                 return await _repository.Update(entity);
@@ -119,7 +119,7 @@ namespace MjCommerce.API.Controllers.Base
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult<int>> Delete(int id)
+        public virtual async Task<ActionResult<int>> Delete(int id)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace MjCommerce.API.Controllers.Base
 
                 if (entityToDelete == null)
                 {
-                    return NotFound($"Entity with Id = {id} not found");
+                    return NotFound($"{typeof(T).Name} with Id = {id} not found");
                 }
 
                 return await _repository.Delete(id);
