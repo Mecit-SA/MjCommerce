@@ -93,19 +93,28 @@ namespace MjCommerce.API.Controllers.Files
                     PhotoName = name
                 });
 
-                if(!products.Any())
+                if(products.Any())
                 {
-                    return BadRequest("Photo is not related to any product");
-                }
+                    var product = products.First();
 
-                var product = products.First();
-
-                // Check if seller AND owner
-                if (User.IsInRole(nameof(Roles.Seller)))
-                {
-                    if (!(await _productOwnerAuthorizationService.AuthorizeAsync(User, product)).Succeeded)
+                    // Check if seller is owner
+                    if (User.IsInRole(nameof(Roles.Seller)))
                     {
-                        return StatusCode(StatusCodes.Status403Forbidden);
+                        if (!(await _productOwnerAuthorizationService.AuthorizeAsync(User, product)).Succeeded)
+                        {
+                            return StatusCode(StatusCodes.Status403Forbidden);
+                        }
+                    }
+
+                    // Delete from table
+                    var photos = await _productPhotoRepository.Get(new ProductPhotoFilter
+                    {
+                        Name = name
+                    });
+
+                    if (photos != null && photos.Any())
+                    {
+                        await _productPhotoRepository.Delete(photos.First().Id);
                     }
                 }
 
@@ -116,20 +125,6 @@ namespace MjCommerce.API.Controllers.Files
                 {
                     return NotFound("File not found");
                 }
-
-
-                // Delete from table
-                var photos = await _productPhotoRepository.Get(new ProductPhotoFilter
-                {
-                    Name = name
-                });
-
-                if(photos == null || !photos.Any())
-                {
-                    return NotFound("Record not found");
-                }
-
-                await _productPhotoRepository.Delete(photos.First().Id);
 
                 return Ok(result);
             }

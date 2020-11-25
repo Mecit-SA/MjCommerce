@@ -16,6 +16,7 @@ using MjCommerce.Shared.Managers.Identity.Interfaces;
 using MjCommerce.Shared.MapperProfiles;
 using MjCommerce.Shared.Models;
 using MjCommerce.Shared.Models.Identity;
+using MjCommerce.Shared.Models.Orders;
 using MjCommerce.Shared.Repositories;
 using MjCommerce.Shared.Repositories.Interfaces;
 using MjCommerce.Shared.Services.Identity;
@@ -26,14 +27,13 @@ namespace MjCommerce.API
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             #region Entity Framework
@@ -48,6 +48,7 @@ namespace MjCommerce.API
             services.AddAutoMapper(typeof(CountryProfile));
             services.AddAutoMapper(typeof(CityProfile));
             services.AddAutoMapper(typeof(ProductPhotoProfile));
+            services.AddAutoMapper(typeof(OrderProfile));
             #endregion
 
             #region Repositories
@@ -55,6 +56,7 @@ namespace MjCommerce.API
             services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddScoped<IRepository<Country>, CountryRepository>();
             services.AddScoped<IRepository<City>, CityRepository>();
+            services.AddScoped<IRepository<Order>, OrderRepository>();
             services.AddScoped<IRepository<ProductPhoto>, ProductPhotoRepository>();
             #endregion
 
@@ -98,7 +100,6 @@ namespace MjCommerce.API
             services.AddControllers();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -106,7 +107,7 @@ namespace MjCommerce.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
+            app.UseFileServer();
 
             app.UseRouting();
 
