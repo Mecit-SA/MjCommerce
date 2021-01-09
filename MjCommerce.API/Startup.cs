@@ -36,6 +36,14 @@ namespace MjCommerce.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("test", builder =>
+                {
+                    builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+                });
+            });
+
             #region Entity Framework
             services.AddDbContext<MjCommerceDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
@@ -102,6 +110,8 @@ namespace MjCommerce.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("test");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

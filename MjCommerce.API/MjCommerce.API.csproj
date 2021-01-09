@@ -23,10 +23,4 @@
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="wwwroot\images\3332d367-601b-41e4-a3fa-17cf807d8f2c_2020_11_24_20_29_12_11_F0F0EC.jpg">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>
